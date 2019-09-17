@@ -1,0 +1,117 @@
+
+.root {
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: rgb(45, 45, 50), rgb(60, 60, 65);
+    -fx-background-insets: 0, 0 1 1 0;
+    -fx-padding: 2 2 2 2;
+}
+
+
+#but, #but1, #apperpannel{
+-fx-padding : 1 1 1 1 ;
+}
+#scrl{
+-fx-padding : 5 1 5 1 ;
+}
+.label{
+    -fx-background-color: transparent;
+     -fx-text-fill: white;
+            -fx-font-family: "Arial Bold Narrow";
+            -fx-font-weight: normal;
+
+    }
+   #sitemlabel{
+       -fx-background-color: transparent;
+        -fx-text-fill: grey;
+               -fx-font-family: "Arial Bold Narrow";
+               -fx-font-weight: normal;
+
+       }
+
+         #logo, #sistemlabel{
+             -fx-background-color: transparent;
+             -fx-text-fill: #61a2b1;
+             -fx-font-family: "Arial Bold Narrow";
+             -fx-font-weight: bold;
+
+         }
+
+.scroll-bar:vertical .track{
+    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+
+
+.scroll-bar:vertical .thumb{
+    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+
+
+.scroll-bar:vertical *.increment-button,
+.scroll-bar:vertical *.decrement-button{
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Narrow";
+    -fx-font-weight: bold;
+
+    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+
+}
+
+.scroll-bar:horizontal *.increment-arrow,
+.scroll-bar:horizontal *.decrement-arrow{
+    -fx-background-color: #61a2b1;
+
+}
+.scroll-pane .corner{
+    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+.button {
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Narrow";
+    -fx-font-weight: bold;
+
+    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+
+.button:hover {
+ -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+ }
+
+
+ .viewport {
+    -fx-background-color: transparent;
+
+ }
+
+ .scroll-pane .viewport{
+    -fx-background-color: transparent;
+
+ }
+  .scroll-pane {
+     -fx-background-color: transparent;
+
+  }
+
+.text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Narrow";
+    -fx-font-weight: bold;
+}
+.promptText{
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Narrow";
+    -fx-font-weight: bold;
+}
+.context-menu {
+    -fx-background-color: rgb(45, 45, 50), rgb(60, 60, 65);
+}
+
+
+
+

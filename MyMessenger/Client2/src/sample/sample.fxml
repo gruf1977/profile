@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?scenebuilder-stylesheet /css/Style.css?>
+
+<VBox alignment="center" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+    <stylesheets><URL value="@/css/Style.css" /></stylesheets>
+
+    <HBox fx:id="but"><Label fx:id="logo" prefWidth="270" text="MyChat" />
+        <Label fx:id="lblnick" text="" HBox.hgrow="ALWAYS" />
+        <Button fx:id="btnsvernut" onAction="#sverprogram" prefHeight="10" prefWidth="10" text="_" />
+        <Label fx:id="sdf" prefWidth="10" text=" " />
+        <Button fx:id="btnexit" onAction="#closeprogram" prefHeight="10" prefWidth="10" text="Х" /></HBox>
+    <VBox fx:id="scrl">
+        <ScrollPane fx:id="ScrollPane1">
+            <VBox fx:id="VboxChat" prefHeight="430" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+
+
+
+            </VBox>
+        </ScrollPane>
+    </VBox>
+
+    <!--TextArea fx:id="textArea" editable="false" VBox.vgrow="ALWAYS" /-->
+
+    <HBox fx:id="apperpannel">
+        <TextField fx:id="loginfield" promptText="Логин" HBox.hgrow="ALWAYS" />
+        <PasswordField fx:id="passwordfield" onAction="#tryToAuth" promptText="Пароль" />
+        <Button fx:id="btn2" onAction="#tryToAuth" prefWidth="90.0" text="Login" />
+    </HBox>
+
+    <HBox fx:id="but1" managed="false" visible="false">
+        <TextField fx:id="textField" onAction="#SendMsg" promptText="Введите текст" HBox.hgrow="ALWAYS" />
+        <Button fx:id="btn1" onAction="#SendMsg" prefWidth="69.0" text="Send" />
+    </HBox>
+
+</VBox>
