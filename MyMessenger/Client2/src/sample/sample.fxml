@@ -21,14 +21,9 @@
     <VBox fx:id="scrl">
         <ScrollPane fx:id="ScrollPane1">
             <VBox fx:id="VboxChat" prefHeight="430" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
-
-
-
             </VBox>
         </ScrollPane>
     </VBox>
-
-    <!--TextArea fx:id="textArea" editable="false" VBox.vgrow="ALWAYS" /-->
 
     <HBox fx:id="apperpannel">
         <TextField fx:id="loginfield" promptText="Логин" HBox.hgrow="ALWAYS" />
@@ -40,5 +35,4 @@
         <TextField fx:id="textField" onAction="#SendMsg" promptText="Введите текст" HBox.hgrow="ALWAYS" />
         <Button fx:id="btn1" onAction="#SendMsg" prefWidth="69.0" text="Send" />
     </HBox>
-
 </VBox>

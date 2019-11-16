@@ -9,8 +9,7 @@ public class AuthService {
     private static final Logger LOGGER = LogManager.getLogger(AuthService.class);
     private static Connection connection;
     private static Statement stmt;
-
-    /*Подключение к БД*/
+    
     public static void connect(){
         try {
             Class.forName("org.sqlite.JDBC");
@@ -19,25 +18,20 @@ public class AuthService {
                 stmt = connection.createStatement();
             } catch (SQLException e) {
                 LOGGER.error(e);
-                //  e.printStackTrace();
             }
         } catch (ClassNotFoundException e) {
             LOGGER.error(e);
-            //  e.printStackTrace();
         }
     }
-
-    /*Отключение от БД*/
+    
     public static  void disconnect(){
         try {
             connection.close();
         } catch (SQLException e) {
             LOGGER.error(e);
-            //  e.printStackTrace();
         }
     }
-
-    /*Получение ник по логину и паролю*/
+    
     public static String getNickByLoginByPasswd(String login, String passwd ) {
         String qry = String.format("SELECT nickname FROM main where login='%s' and password='%s'", login, passwd);
         try {
@@ -47,12 +41,10 @@ public class AuthService {
             }
         } catch (SQLException e) {
             LOGGER.error(e);
-            //  e.printStackTrace();
         }
         return null;
     }
-
-    /*Создание новой таблицы в БД*/
+    
     static public void initNewBDClientAndBl() {
         String qry = " SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='main'";
         try {
@@ -72,47 +64,37 @@ public class AuthService {
             }
         } catch (SQLException e) {
             LOGGER.error(e);
-            //  e.printStackTrace();
         }
     }
-
-
-
-    /*Проверка наличия записи в БД*/
+    
     public static Boolean isNickInBd(String NickName) {
         boolean res=false;
         String qry = String.format("SELECT EXISTS(SELECT nickname FROM main WHERE nickname = '%s')", NickName);
         try {
             ResultSet rr  = stmt.executeQuery(qry);
-            //System.out.println(rr.getInt(1));
             if (rr.getInt(1)==1){
                 res = true;
             }
         } catch (SQLException e) {
             LOGGER.error(e);
-            //  e.printStackTrace();
         }
         return res;
     }
-
-    // Проверка наличия пары в Черном списке
+    
     public static Boolean isAutorInBLUser(String autor, String user) {
         boolean res=false;
         String qry = String.format("SELECT EXISTS(SELECT blackuser and autor FROM blaclist WHERE blackuser = '%s' and autor='%s')", autor, user);
         try {
             ResultSet rr  = stmt.executeQuery(qry);
-            //System.out.println(rr.getInt(1));
             if (rr.getInt(1)==1){
                 res = true;
             }
         } catch (SQLException e) {
             LOGGER.error(e);
-            //  e.printStackTrace();
         }
         return res;
     }
-
-    /*Добавление записи в Черный список*/
+    
     public static boolean addBList(String autor, String blackuser){
         boolean res = false;
         String qry = String.format("INSERT INTO blaclist (autor, blackuser) VALUES ('%s', '%s')", autor, blackuser);
@@ -127,8 +109,7 @@ public class AuthService {
         }
         return res;
     }
-
-    /*Добавление Клиента*/
+    
     public static boolean addClientToBD(String login, int passsword, String nickname){
         boolean res = false;
         String qry = String.format("INSERT INTO main (login, password, nickname) VALUES ('%s', '%s' , '%s')", login, passsword, nickname);
@@ -143,8 +124,7 @@ public class AuthService {
         }
         return res;
     }
-
-    /*Удаление из БД*/
+    
     public static boolean delBlist(String autor, String blackuser){
         boolean res = false;
         String qry = String.format("DELETE FROM blaclist WHERE autor='%s' and blackuser='%s'", autor, blackuser);
@@ -155,12 +135,10 @@ public class AuthService {
             }
         } catch (SQLException e) {
             LOGGER.error(e);
-            //  e.printStackTrace();
         }
         return res;
     }
-
-    //Заменяем ник
+    
     public static boolean chageNickInBd(String autor, String newNick){
         boolean res = false;
         String qry = String.format("UPDATE blaclist SET blackuser='%s' WHERE blackuser='%s'", newNick, autor);
@@ -175,29 +153,24 @@ public class AuthService {
             }
         } catch (SQLException e) {
             LOGGER.error(e);
-            //  e.printStackTrace();
         }
         return res;
     }
-
-    /*Чтение черного списка*/
+    
     public static ArrayList readBlackList(String autor) {
         String qry = String.format("SELECT * FROM blaclist WHERE autor='%s'", autor);
         ArrayList BlackList = new ArrayList();
-       try {
+        try {
             ResultSet rs = stmt.executeQuery(qry);
-            // String BlackList[rs.getRow()];
             while (rs.next()) {
                 BlackList.add(rs.getString("blackuser"));
             }
         } catch (SQLException e) {
             LOGGER.error(e);
-            //  e.printStackTrace();
         }
         return BlackList;
     }
-
-    //заменяем пароль
+    
     public static boolean chagePassword(String nick, String newPasswd){
         boolean res = false;
         String qry = String.format("UPDATE main SET password='%s' WHERE nickname='%s'", newPasswd.hashCode(), nick);
@@ -206,15 +179,13 @@ public class AuthService {
             rs = stmt.executeUpdate(qry);
         } catch (SQLException e) {
             LOGGER.error(e);
-            //  e.printStackTrace();
         }
         if (rs>0){
             res= true;
         }
         return res;
     }
-
-    //удаление пользователя
+    
     public static Boolean delNickFromBd(String strme) {
         boolean res = false;
         String qry = String.format("DELETE FROM main WHERE nickname='%s'", strme);

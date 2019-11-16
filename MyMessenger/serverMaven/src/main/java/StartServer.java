@@ -11,9 +11,6 @@ public class StartServer {
         LOGGER.error("Error");
         LOGGER.fatal("Fatal");
         LOGGER.info("String: {}.", "Старт LOGGER");
-
-
         new Server();
     }
-
 }

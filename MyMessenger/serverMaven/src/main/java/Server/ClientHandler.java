@@ -2,7 +2,6 @@
 package Server;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -11,13 +10,11 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import static Server.AuthService.isNickInBd;
 import static Server.Server.clients;
 
 public class ClientHandler {
     private static final Logger LOGGER = LogManager.getLogger(ClientHandler.class);
-
     private Socket socket;
     private DataOutputStream out;
     private DataInputStream in;
@@ -29,8 +26,7 @@ public class ClientHandler {
     public String getNick() {
         return this.nick;
     }
-
-
+    
     private boolean isInChat(String str){
         Boolean res = false;
         for (ClientHandler o: clients) {
@@ -41,8 +37,7 @@ public class ClientHandler {
         }
         return res;
     }
-
-    //главный метод слушатетель стримов
+    
     public ClientHandler(final Server server, Socket socket){
         try {
             this.socket = socket;
@@ -81,9 +76,7 @@ public class ClientHandler {
                                                 sendMsg("/sysinfo /info - справочник команд");
                                                 blacklist = new ArrayList();
                                                 setBlacklist();
-                                                // Создаем таблицу для хранения истории переписки или считываем историю
                                                 LOGGER.info("Message to "+nick +" Клиент " + nick + " подключился");
-                                                // System.out.println("Клиент " + nick + " подключился");
                                                 break;
                                             } else {
                                                 LOGGER.info( "Message to "+nick +" Err: Неверный логин/пароль");
@@ -93,7 +86,6 @@ public class ClientHandler {
                                     }
                                     while (true) {
                                         str = in.readUTF();
-                                        //System.out.println("Client " + str);
                                         if (str.startsWith("/chnick")) {//сменить ник
                                             LOGGER.info("Message from "+nick +" " + str);
                                             changeNick(str);
@@ -143,7 +135,6 @@ public class ClientHandler {
                                 } catch (IOException | SQLException e) {
                                     //e.printStackTrace();
                                     LOGGER.warn( "Нет связи с клиентом "+nick );
-                                    // System.out.println("Нет связи с клиентом");
                                 } finally {
                                     CloseClient();
                                 }
@@ -152,11 +143,9 @@ public class ClientHandler {
             }
         } catch (IOException e) {
             LOGGER.error(e);
-            //e.printStackTrace();
         }
     }
-
-    //получить ip и port с сервера
+    
     private void readIpAnpPortServer(String str) {
         try {
             sendMsg("/iPPort "+ Server.PORT + " " +InetAddress.getLocalHost().getHostAddress());
@@ -165,8 +154,7 @@ public class ClientHandler {
             e.printStackTrace();
         }
     }
-
-    //удалить пользователя
+    
     private void delUser(String str) {
         if (this.getNick().equals("Admin")) {
             String[] strmes = str.split(" ", 2);
@@ -194,8 +182,7 @@ public class ClientHandler {
             LOGGER.info("Message to "+nick +" Err: Только Admin может удалять пользователей ");
         }
     }
-
-    //добавить нового пользователя
+    
     private void addUser(String str) {
         String[] strmes = str.split(" ", 2);
         if (strmes.length < 2) {
@@ -216,9 +203,7 @@ public class ClientHandler {
         }
     }
 
-    //поменять пароль
     private void addChangePassword(String str) {
-        // /chnick nick
         String[] strmes = str.split(" ", 2);
         if (strmes.length < 2) {
             sendMsg("/sysinfo Err: неверное значение /chpass ");
@@ -238,13 +223,10 @@ public class ClientHandler {
             }
         }
     }
-
-    //изменить ник
+    
     private void changeNick(String str){
-        // /chnick nick
         if (!this.getNick().equals("Admin")) {
             String[] strmes = str.split(" ", 2);
-
             if (strmes.length < 2) {
                 sendMsg("/sysinfo Err: неверное значение /chnick ");
                 LOGGER.info("Message to "+nick +" Err: неверное значение /chnick ");
@@ -254,7 +236,6 @@ public class ClientHandler {
                     sendMsg("/sysinfo Err: неверное значение /chnick ");
                     LOGGER.info("Message to "+nick +" Err: неверное значение /chnick ");
                 } else {
-                    // проверить по базе не зарегистрирован ли такой ник
                     if (isNickInBd(newNick)) {
                         sendMsg("/sysinfo Err: Такой nick уже зарегистрирован (" + newNick + ")");
                         LOGGER.info("Message to "+nick +" Err: Такой nick уже зарегистрирован (" + newNick + ")");
@@ -275,8 +256,7 @@ public class ClientHandler {
             LOGGER.info("Message to "+nick +" Admin не может менять nick");
         }
     }
-
-// показать списк клиентов онлайн
+    
     private void whoOnline() {
         sendMsg("/sysinfo On-line : ");
         LOGGER.info("Message to "+nick +" On-line : (список юзеров онлайн)");
@@ -285,7 +265,7 @@ public class ClientHandler {
             sendMsg("/sysinfo " + ++f + ". " + o.getNick());
         }
     }
-    // создание справочной информации
+
     private void info() {
         LOGGER.info("Message to "+nick +" /info : (справочник команд)");
         sendMsg("/sysinfo \nСписок команд: \n");
@@ -306,14 +286,12 @@ public class ClientHandler {
         sendMsg("/sysinfleft  /who - кто онлайн \n");
         sendMsg("/sysinfleft  /info - справочник команд\n");
     }
-
-    //Чтение черного списка
+    
     private void readBlackList(){
         sendMsg("/sysinfo Черный список: " + blacklist.toString());
         LOGGER.info("Message to "+nick +" Черный список: " + blacklist.toString());
     }
-
-    /*Удаление из черного списка*/
+    
     private void delBlackList(String str) throws SQLException {
         String[] strmes = str.split(" ", 2);
         if (strmes.length < 2) {
@@ -342,8 +320,7 @@ public class ClientHandler {
             }
         }
     }
-
-    /*Добавление в черный список*/
+    
     private void addBlackList(String str) throws SQLException {
         String[] strmes = str.split(" ", 2);
         if (strmes.length < 2) {
@@ -378,21 +355,17 @@ public class ClientHandler {
             }
         }
     }
-
-    //отключение и закрытие клиента
+    
     public void CloseClient(){
         try {
             in.close();
             out.close();
             out.close();
         } catch (IOException e) {
-
-            // System.out.println("Нет связи с клиентом");
             LOGGER.warn("Нет связи с клиентом");
         } finally {
             server.deleteClient(ClientHandler.this);
         }
-
         Thread.interrupted();
     }
     public void sendMsg(String msg) {
@@ -404,13 +377,11 @@ public class ClientHandler {
             CloseClient();
         }
     }
-
-    //получить черный список текущего пользователя
+    
     public void setBlacklist() {
         this.blacklist = AuthService.readBlackList(this.nick);
     }
-
-// отправка персонального сообщения с префиксом /w
+    
     private void personalMsg(String str){
         String[] strmes = str.split(" ", 3);
 

@@ -9,7 +9,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
@@ -21,10 +20,10 @@ import java.util.Scanner;
 
 public class Controller implements Initializable {
     static String filename ="connect.sys";
-    private boolean connectServer = false; //флаг показывающий есть ли связь с сервером
+    private boolean connectServer = false;
     private String logonick = "";
     private boolean isAuthorised;
-    private Socket socket; //инициализируем сокет
+    private Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
     static String IP_ADRES = "localhost";
@@ -32,8 +31,6 @@ public class Controller implements Initializable {
     private String login;
     private String namefile;
     private List<String> historyList;
-
-    //количество сообщений при демонстрации истории
     private int countHistoryMsg =100;
 
     @FXML Button btnexit;
@@ -49,8 +46,6 @@ public class Controller implements Initializable {
     @FXML TextField textField;
 
     private void savePortServe(){
-
-        //запись параметров подключения
         File file = new File(filename);
         PrintWriter pw = null;
         try {
@@ -61,10 +56,8 @@ public class Controller implements Initializable {
         pw.println("PORT:" + PORT);
         pw.println("IPSERVER:" + IP_ADRES);
         pw.close();
-
     }
 
-    //закрытие программы
     public void closeprogram(ActionEvent actionEvent) {
         savePortServe();
         if (isAuthorised) {
@@ -74,13 +67,11 @@ public class Controller implements Initializable {
         stage.close();
     }
 
-    //свернуть программу
     public void sverprogram(ActionEvent actionEvent) {
         Stage stage = (Stage) btnsvernut.getScene().getWindow();
         stage.toBack();
     }
 
-    //авторизация
     public void tryToAuth(ActionEvent actionEvent) {
         try {
             connectToServer();
@@ -95,21 +86,19 @@ public class Controller implements Initializable {
         }
     }
 
-    //отправка сообщения
     public void SendMsg(ActionEvent actionEvent) {
-        //чистим экран по запросу /clear
         if (textField.getText().equals("/clear")) {
             clear();
         } else
 
         if (textField.getText().equals("/info")){
-            showHelpInfo(); //показать справочную информацию
+            showHelpInfo();
         } else
         if (textField.getText().equals("/clearhistory")){
-            historyList.clear(); //очистить историю сообщений
+            historyList.clear();
         } else
         if (textField.getText().equals("/history")){
-            showHistoryMsg(); //показать историю сообщений
+            showHistoryMsg();
         }
         else
         if (textField.getText().equals("/end")) {
@@ -129,7 +118,6 @@ public class Controller implements Initializable {
         textField.requestFocus();
     }
 
-    //Показать историю сообщений
     private void showHistoryMsg() {
         int count = 0;
         for (String msg: historyList) {
@@ -139,7 +127,6 @@ public class Controller implements Initializable {
         }
     }
 
-    //отправка системных сообщений на сервер
     public void SendMsg(String msg) {
         try {
             out.writeUTF(msg);
@@ -149,14 +136,13 @@ public class Controller implements Initializable {
         }
     }
 
-    //показывать справочную информацию
     private void showHelpInfo()  {
         try {
-            File file = new File("help.txt"); // создаем объект файла
-            Scanner scanner = null; // создаем объект сканер
+            File file = new File("help.txt");
+            Scanner scanner = null;
             scanner = new Scanner(file);
-            while (scanner.hasNextLine()) { //цикл будет выполнятся пока есть строки в файле
-                showMsg("/sysinfleft  " + scanner.nextLine()); //выводим на экран построчно
+            while (scanner.hasNextLine()) {
+                showMsg("/sysinfleft  " + scanner.nextLine());
             }
             scanner.close();
         } catch (FileNotFoundException e) {
@@ -164,10 +150,9 @@ public class Controller implements Initializable {
         }
     }
 
-    //читаем параметров подключения
     private void getpPortIpServer() {
         File file = new File(filename);
-        Scanner scanner = null; // создаем объект сканер
+        Scanner scanner = null;
         try {
             scanner = new Scanner(file);
         } catch (FileNotFoundException e) {
@@ -178,16 +163,15 @@ public class Controller implements Initializable {
             lineFromFile = scanner.nextLine();
             String[] strmes = lineFromFile.split(":", 2);
             if (strmes[0].startsWith("PORT")) {
-                PORT = Integer.parseInt(strmes[1]); // порт
+                PORT = Integer.parseInt(strmes[1]);
             }
             if (strmes[0].startsWith("IPSERVER")) {
-                IP_ADRES = strmes[1]; // сервер
+                IP_ADRES = strmes[1];
             }
         }
         scanner.close();
     }
 
-    // запуск при старте программы
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         if (!isFile(filename)){
@@ -197,14 +181,7 @@ public class Controller implements Initializable {
         showMsg("/sysinfo Введите логин/пароль");
     }
 
-    //вывод сообщений
     private void showMsg(String msg) {
-/*   Форматы сообщений
-/sysinfo - Системные сообщения - по центру
-/sysinfleft - Системные сообщения - слева
-/sysinfright - Системные сообщения - справа
-не помеченые сообщения печатются белым с отступом слева
- */
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -212,32 +189,24 @@ public class Controller implements Initializable {
                 hBox.setPrefWidth(ScrollPane1.getWidth() - 20);
                 Label label = new Label();
                 label.setWrapText(true);
-
-                //sysinfo - Системные сообщения - по центру
                 if (msg.startsWith("/sysinfo ")) {
                     String[] stroka = msg.split(" ", 2);
                     label.setId("sistemlabel");
                     hBox.setAlignment(Pos.TOP_CENTER);
                     label.setText(stroka[1]);
                 } else
-
-                    //sysinfleft - Системные сообщения - слева
                     if (msg.startsWith("/sysinfleft ")) {
                         String[] stroka = msg.split(" ", 2);
                         label.setId("sistemlabel");
                         hBox.setAlignment(Pos.TOP_LEFT);
                         label.setText(stroka[1]);
                     } else
-
-                        //sysinfright - Системные сообщения - справа
                         if (msg.startsWith("/sysinfright")) {
                             String[] stroka = msg.split(" ", 2);
                             label.setId("sistemlabel");
                             hBox.setAlignment(Pos.TOP_RIGHT);
                             label.setText(stroka[1]);
                         } else
-
-                            //если наше сообщение то заменяем ник на You и цвет серый
                             if (msg.startsWith(logonick + ":")) {
                                 hBox.setAlignment(Pos.TOP_LEFT);
                                 label.setId("sitemlabel");
@@ -245,7 +214,6 @@ public class Controller implements Initializable {
                                 label.setText("You : " + strmes[1]);
                                 historyList.add("/histor " + label.getText());
                             } else
-                                //если это история сообщений (сообщения повторно не помещаются в историю)
                                 if (msg.startsWith("/histor")){
                                     String[] strmes = msg.split(" ", 2);
                                     if (msg.startsWith("You :")){
@@ -257,8 +225,6 @@ public class Controller implements Initializable {
                                         label.setText("   " + strmes[1]);
                                     }
                                 } else {
-
-                                    //если обычное сообщение то добавляем отступ
                                     hBox.setAlignment(Pos.TOP_LEFT);
                                     label.setText("   " + msg);
                                     historyList.add("/histor " + label.getText());
@@ -270,7 +236,6 @@ public class Controller implements Initializable {
         });
     }
 
-    //соедиенение с сервером
     public void connectToServer() {
         try {
             socket = new Socket(IP_ADRES, PORT);
@@ -280,7 +245,6 @@ public class Controller implements Initializable {
         } catch (IOException e) {
             showMsg("/sysinfo Нет связи с сервером");
             connectServer = false;
-            //e.printStackTrace();
         }
 
         new Thread(new Runnable() {
@@ -288,32 +252,23 @@ public class Controller implements Initializable {
             public void run() {
                 while (true) {
                     if (connectServer) {
-                        //слушаем поток
                         try {
                             String  str = in.readUTF();
-
-                            //если пришла строка авторизации
                             if (str.startsWith("/authok")) {
                                 String[] strlogo = str.split(" ");
                                 logonick = strlogo[1];
                                 setAuthorised(true);
-                                //имя файла это имя history + nick (история сообщений)
                                 namefile = ".history" + logonick + ".bin";
-                                createHistoryList(); //загружаем историю сообщений
+                                createHistoryList();
                             }
                             else
-
-                                //пришло подтверждение смены ника
                                 if (str.startsWith("/newNick")) {
                                     String[] strmes = str.split(" ", 2);
-                                    deleteFile();//удаляем файл истории сообщени (новый создастся автоматически)
-                                    logonick = strmes[1];
-                                    //имя файла это имя history + nick (история сообщений)
+                                    deleteFile();                                    
+				    logonick = strmes[1];
                                     namefile = ".history" + logonick + ".bin";
                                     Platform.runLater(() -> logo.setText("MyChat - " + logonick));
                                 } else
-
-                                    //пришло IP и порт сервера
                                     if (str.startsWith("/iPPort")) {
                                         String[] strmes = str.split(" ", 3);
                                         showMsg("/sysinfleft  PORT:"+ strmes[1] + " \n");
@@ -322,22 +277,16 @@ public class Controller implements Initializable {
                                         PORT = Integer.parseInt(strmes[1]);
                                         savePortServe();
                                     } else
-
-                                        // пришло сообщение максимальное количество подключений
                                         if (str.equals("/serverMaxConnect")) {
                                             showMsg("/sysinfo Превышен лимит подключений");
                                             in.close();
                                             out.close();
                                             socket.close();
                                         } else
-
-                                            // пришло сообщение отключаться
                                             if (str.equals("/serverClosed")) {
                                                 setAuthorised(false);
                                                 connectClose();
                                             } else {
-
-                                                // отправляем строку на экран
                                                 showMsg(str);
                                             }
                         } catch (IOException e) {
@@ -351,7 +300,6 @@ public class Controller implements Initializable {
         }).start();
     }
 
-    //создаем лист для истории записи сообщений
     private void createHistoryList() {
         historyList = new ArrayList<>();
         //если нет такого файла то, historyList - пустой
@@ -367,7 +315,6 @@ public class Controller implements Initializable {
         }
     }
 
-    //Проверяе наличие файла
     private boolean isFile(String namefile) {
         boolean res = false;
         File file = new File(namefile);
@@ -377,7 +324,6 @@ public class Controller implements Initializable {
         return res;
     }
 
-    //Удаляем файл
     private void deleteFile() {
         File file = new File(namefile);
         if (!isFile(namefile)) {
@@ -385,10 +331,8 @@ public class Controller implements Initializable {
         }
     }
 
-    //запись истории сообщений в файл
     private void saveHistoriList(){
         File file = new File(namefile);
-        //Если файла нет то создаем его
         try {
             if (!isFile(namefile)) {
                 file.createNewFile();
@@ -400,11 +344,9 @@ public class Controller implements Initializable {
             fos.close();
         } catch (IOException e) {
             showMsg("/sysinfo Err: Ошибка записи в файл");
-            //e.printStackTrace();
         }
     }
 
-    //разрываем соедиенеие
     private void connectClose() {
         setAuthorised(false);
         connectServer = false;
@@ -419,7 +361,6 @@ public class Controller implements Initializable {
         }
     }
 
-    //если если авторизовались меняем экран с авторизации на ввод сообщений
     public void setAuthorised(boolean isAuthorised) {
         this.isAuthorised = isAuthorised;
         if (!isAuthorised) {
@@ -439,7 +380,6 @@ public class Controller implements Initializable {
         }
     }
 
-    //чистим экран
     private void clear() {
         VboxChat.getChildren().clear();
         textField.clear();

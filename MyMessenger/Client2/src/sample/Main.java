@@ -11,11 +11,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-
 public class Main extends Application {
     private double xOffset;
     private double yOffset;
-
 
     @Override
     public void start ( final Stage stage) throws Exception {
@@ -38,17 +36,11 @@ public class Main extends Application {
                 stage.setY(event.getScreenY() + yOffset);
             }
         });
-
         stage.setScene(scene);
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setResizable(true);
-
         stage.show();
-
-
     }
-
-
 
     public static void main(String[] args) {
          launch(args);
